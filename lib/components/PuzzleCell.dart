@@ -34,7 +34,7 @@ class PuzzleCell extends StatelessWidget {
               child: Icon(
                 Icons.play_arrow,
                 color: Colors.white,
-                size: constraint.biggest.width-10,
+                size: constraint.biggest.width - 10,
               ),
             );
           })),
@@ -45,12 +45,14 @@ class PuzzleCell extends StatelessWidget {
     return Flexible(
       flex: 4,
       child: Container(
-        padding: const EdgeInsets.only(top: 8.0, right: 8.0, bottom: 4.0,left:5.0),
+        padding:
+            const EdgeInsets.only(top: 8.0, right: 8.0, bottom: 4.0, left: 5.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0,bottom:6.0),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 8.0, bottom: 6.0),
               child: AutoSizeText(
                 puzzle.puzzleNo.toString() + ": " + puzzle.title,
                 style: Theme.of(context).textTheme.headline1,
