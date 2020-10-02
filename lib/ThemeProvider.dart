@@ -23,6 +23,11 @@ class ThemeProvider {
           color: Colors.white,
           fontWeight: FontWeight.w400,
           fontFamily: "SF Pro Text"),
+      bodyText2: TextStyle(
+          fontSize: 17,
+          color: Colors.white,
+          fontWeight: FontWeight.w400,
+          fontFamily: "SF Pro Display"),
     );
   }
 
@@ -81,27 +86,29 @@ class ThemeProvider {
 
   ThemeData theme() {
     return ThemeData(
-        fontFamily: 'SF Pro Text',
-        scaffoldBackgroundColor: darkBlue(),
-        textTheme: _defaultTextTheme()
-        // colorScheme: ColorScheme.light(primary: Colors.black),
-        // dividerColor: Color(0x803C3C43),
-        // buttonTheme: ButtonThemeData(
-        //   buttonColor: Color(0xFFE6535D),
-        //   textTheme: ButtonTextTheme.primary,
-        // ),
-        // indicatorColor: Color(0xFFE6535D),
-        // appBarTheme: AppBarTheme(color: Colors.white, textTheme: TextTheme()),
-        // tabBarTheme: TabBarTheme(
-        //   unselectedLabelColor: Colors.grey,
-        // ),
-        // textTheme: _defaultTextTheme(),
-        // primaryTextTheme: _defaultTextTheme(),
-        // accentTextTheme: _defaultTextTheme(),
-        // primaryColor: activeColor(),
-        // primaryIconTheme: const IconThemeData.fallback().copyWith(
-        //   color: Colors.black,
-        // ),
-        );
+      fontFamily: 'SF Pro Text',
+      scaffoldBackgroundColor: darkBlue(),
+      textTheme: _defaultTextTheme(),
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      // colorScheme: ColorScheme.light(primary: Colors.black),
+      // dividerColor: Color(0x803C3C43),
+      // buttonTheme: ButtonThemeData(
+      //   buttonColor: Color(0xFFE6535D),
+      //   textTheme: ButtonTextTheme.primary,
+      // ),
+      // indicatorColor: Color(0xFFE6535D),
+      // appBarTheme: AppBarTheme(color: Colors.white, textTheme: TextTheme()),
+      // tabBarTheme: TabBarTheme(
+      //   unselectedLabelColor: Colors.grey,
+      // ),
+      // textTheme: _defaultTextTheme(),
+      // primaryTextTheme: _defaultTextTheme(),
+      // accentTextTheme: _defaultTextTheme(),
+      // primaryColor: activeColor(),
+      // primaryIconTheme: const IconThemeData.fallback().copyWith(
+      //   color: Colors.black,
+      // ),
+    );
   }
 }

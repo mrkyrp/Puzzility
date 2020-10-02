@@ -4,6 +4,7 @@ import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
+import 'package:puzzility/views/hint/HintView.dart';
 
 class PuzzleView extends StatefulWidget {
   Puzzle puzzle;
@@ -16,7 +17,8 @@ class _PuzzleViewState extends State<PuzzleView> {
   Widget _buildPuzzleTextView() {
     return Container(
         color: Colors.red,
-        height: MediaQuery.of(context).size.height / (widget.puzzle.choices.length > 0 ? 2.75 : 2.5),
+        height: MediaQuery.of(context).size.height /
+            (widget.puzzle.choices.length > 0 ? 2.75 : 2.5),
         child: Text(widget.puzzle.puzzleText,
             style: Theme.of(context).textTheme.bodyText1));
   }
@@ -27,7 +29,17 @@ class _PuzzleViewState extends State<PuzzleView> {
 
   _watchVideoAds() {}
 
-  _navigateToHints() {}
+  _navigateToHints() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => HintView(widget.puzzle),
+        transitionsBuilder: (c, anim, a2, child) =>
+            FadeTransition(opacity: anim, child: child),
+        transitionDuration: Duration(milliseconds: 300),
+      ),
+    );
+  }
 
   Widget _circularButton(Icon icon, Color color, VoidCallback onTap,
       {double width, double height}) {
@@ -117,31 +129,31 @@ class _PuzzleViewState extends State<PuzzleView> {
 
   Widget _buildBottomBarSection() {
     return Container(
-        child: Row(
-          children: <Widget>[
-            _circularButton(
-                Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 40,
-                ),
-                ThemeProvider().pink(),
-                _navigateToHints,
-                width: 60,
-                height: 60),
-            Spacer(),
-            _circularButton(
-                Icon(
-                  FontAwesomeIcons.film,
-                  color: Colors.white,
-                  size: 35,
-                ),
-                ThemeProvider().gold(),
-                _watchVideoAds,
-                width: 60,
-                height: 60),
-          ],
-        ),
+      child: Row(
+        children: <Widget>[
+          _circularButton(
+              Icon(
+                Icons.search,
+                color: Colors.white,
+                size: 40,
+              ),
+              ThemeProvider().pink(),
+              _navigateToHints,
+              width: 60,
+              height: 60),
+          Spacer(),
+          _circularButton(
+              Icon(
+                FontAwesomeIcons.film,
+                color: Colors.white,
+                size: 35,
+              ),
+              ThemeProvider().gold(),
+              _watchVideoAds,
+              width: 60,
+              height: 60),
+        ],
+      ),
     );
   }
 
