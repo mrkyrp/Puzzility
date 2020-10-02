@@ -6,20 +6,23 @@ import 'package:puzzility/ThemeProvider.dart';
 class GradientButton extends StatelessWidget {
   final IconData icon;
   final String text;
+  final TextStyle style;
   final Function onTap;
   final LinearGradient gradient = ThemeProvider().primaryGradient();
 
-  GradientButton(this.icon, this.text, {this.onTap});
+  GradientButton(this.icon, this.text, {this.onTap, this.style});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: ThemeProvider().lightBlue(),
+        color: Colors.transparent,
       ),
-      child: RaisedButton(
-        onPressed: onTap,
+      child: FlatButton(
+        onPressed: () {
+          onTap();
+        },
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         padding: EdgeInsets.all(0),
@@ -27,20 +30,23 @@ class GradientButton extends StatelessWidget {
           decoration: BoxDecoration(
               gradient: gradient, borderRadius: BorderRadius.circular(10.0)),
           child: Container(
-            constraints: const BoxConstraints(minWidth: 88.0, minHeight: 36.0),
+            constraints: const BoxConstraints(minWidth: 88.0, minHeight: 44.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                icon ??
-                    SizedBox(
-                      width: 0,
-                      height: 0,
-                    ),
+                icon != null
+                    ? Icon(
+                        icon,
+                        color: Colors.white,
+                      )
+                    : SizedBox(
+                        width: 0,
+                        height: 0,
+                      ),
                 Text(
                   text,
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.headline6.copyWith(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: style ?? Theme.of(context).textTheme.bodyText1,
                 ),
               ],
             ),

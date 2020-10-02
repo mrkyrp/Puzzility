@@ -12,19 +12,16 @@ class PuzzleRepository {
 
     for (var table in excel.tables.keys) {
       print(table); //sheet Name
-      print(excel.tables[table].maxCols);
-      print(excel.tables[table].maxRows);
       for (var row in excel.tables[table].rows.sublist(1)) {
-        // print("$row");
-        List<String> hints = [row[6].toString(), row[7].toString(), row[8].toString()];
+        print("$row");
+        List<String> hints = [
+          row[6].toString(),
+          row[7].toString(),
+          row[8].toString()
+        ];
         puzzleList.add(Puzzle(
-          row[0].toInt(),
-          row[1],
-          row[2],
-          row[4].toString(),
-          row[3],
-          hints,
-        ));
+            row[0].toInt(), row[1], row[2], row[4].toString(), row[3], hints,
+            choices: row[5] != null ? row[5].toString().split(",") : []));
       }
     }
     return puzzleList;

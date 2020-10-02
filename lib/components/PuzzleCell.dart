@@ -9,16 +9,12 @@ import 'package:puzzility/model/Puzzle.dart';
 
 class PuzzleCell extends StatelessWidget {
   final Puzzle puzzle;
-  final ValueChanged<int> onTap;
-  final Function onPlayButtonTap;
+  final VoidCallback onTap;
   final int stars;
   final bool isUnlocked;
 
   PuzzleCell(this.puzzle,
-      {this.onTap,
-      this.onPlayButtonTap,
-      this.stars = 0,
-      this.isUnlocked = false});
+      {this.onTap, this.stars = 0, this.isUnlocked = false});
 
   Widget _leadingContainer() {
     return Flexible(
@@ -55,7 +51,7 @@ class PuzzleCell extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0, bottom: 6.0),
               child: AutoSizeText(
                 puzzle.puzzleNo.toString() + ": " + puzzle.title,
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.headline2,
                 maxLines: 2,
               ),
             ),
@@ -78,10 +74,13 @@ class PuzzleCell extends StatelessWidget {
                     },
                   ),
                   Spacer(),
-                  GradientButton(
-                    null,
-                    "Play",
-                    onTap: onPlayButtonTap,
+                  Container(
+                    padding: EdgeInsets.only(bottom: 4.0),
+                    child: GradientButton(
+                      null,
+                      "Play",
+                      onTap: onTap,
+                    ),
                   ),
                 ],
               ),
