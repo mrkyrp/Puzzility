@@ -5,6 +5,7 @@ import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/views/hint/HintView.dart';
+import 'dart:math';
 
 class PuzzleView extends StatefulWidget {
   Puzzle puzzle;
@@ -14,13 +15,24 @@ class PuzzleView extends StatefulWidget {
 }
 
 class _PuzzleViewState extends State<PuzzleView> {
+  FocusNode _focusNode = FocusNode();
+  double bottomSpace = 0.0;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Widget _buildPuzzleTextView() {
     return Container(
-        color: Colors.red,
-        height: MediaQuery.of(context).size.height /
-            (widget.puzzle.choices.length > 0 ? 2.75 : 2.5),
-        child: Text(widget.puzzle.puzzleText,
-            style: Theme.of(context).textTheme.bodyText1));
+      padding: EdgeInsets.only(bottom:15.0),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height /
+              (widget.puzzle.choices.length > 0 ? 2.75 : 1.75),
+        ),
+        child: SingleChildScrollView(
+          child: Text(widget.puzzle.puzzleText,
+              style: Theme.of(context).textTheme.bodyText1),
+        ));
   }
 
   _onClearTextFieldTapped() {}
@@ -28,6 +40,10 @@ class _PuzzleViewState extends State<PuzzleView> {
   _onSubmitAnswerTapped() {}
 
   _watchVideoAds() {}
+
+  _dismissKeyboard(String text) {
+    FocusManager.instance.primaryFocus.unfocus();
+  }
 
   _navigateToHints() {
     Navigator.push(
@@ -101,6 +117,8 @@ class _PuzzleViewState extends State<PuzzleView> {
                     child: TextField(
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headline3,
+                      focusNode: _focusNode,
+                      onSubmitted: _dismissKeyboard,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Answer here",
@@ -177,13 +195,26 @@ class _PuzzleViewState extends State<PuzzleView> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              _buildPuzzleTextView(),
-              _buildAnswerSection(),
-              Spacer(),
-              _buildBottomBarSection(),
-            ],
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                      height: max(500, constraints.maxHeight)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildPuzzleTextView(),
+                      _buildAnswerSection(),
+                      Spacer(),
+                      _buildBottomBarSection(),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
