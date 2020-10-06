@@ -6,12 +6,14 @@ class Puzzle {
   bool isUnlocked;
   String puzzleText;
   String answer;
+  String resultText;
   String type;
   PuzzleType puzzleType;
   List<String> hints;
   List<String> choices;
 
-  Puzzle(this.puzzleNo, this.title, this.puzzleText, this.answer,this.type, this.hints,
+  Puzzle(this.puzzleNo, this.title, this.puzzleText, this.answer, this.resultText,this.type,
+      this.hints,
       {this.choices}) {
     switch (type) {
       case "Type":

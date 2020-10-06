@@ -34,7 +34,7 @@ class _SettingViewState extends State<SettingView> {
           SizedBox(height: 24),
           Container(
             width: MediaQuery.of(context).size.width / 1.2,
-            child: GradientButton(Icons.share, "Share",
+            child: GradientButton("Share",icon:Icons.share,
                 style: Theme.of(context)
                     .textTheme
                     .headline2

@@ -7,8 +7,9 @@ class ButtonWithBorder extends StatelessWidget {
   final String text;
   final TextStyle style;
   final Function onTap;
+  final Color bgColor;
 
-  ButtonWithBorder(this.text, {this.onTap, this.style});
+  ButtonWithBorder(this.text, {this.onTap, this.style,this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class ButtonWithBorder extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(width: 4.0, color: ThemeProvider().blueBorder()),
-          color: Colors.transparent,
+          color: bgColor ?? Colors.transparent,
         ),
         child: FlatButton(
             onPressed: onTap,

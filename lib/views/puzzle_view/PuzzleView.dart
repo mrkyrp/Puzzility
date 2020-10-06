@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:puzzility/ThemeProvider.dart';
@@ -5,7 +7,10 @@ import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/views/hint/HintView.dart';
+import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
 import 'dart:math';
+
+import 'package:puzzility/views/result/ResultView.dart';
 
 class PuzzleView extends StatefulWidget {
   Puzzle puzzle;
@@ -16,7 +21,12 @@ class PuzzleView extends StatefulWidget {
 
 class _PuzzleViewState extends State<PuzzleView> {
   FocusNode _focusNode = FocusNode();
-  double bottomSpace = 0.0;
+
+  final answerTextController = TextEditingController();
+  Color textFieldColor = Colors.transparent;
+  Color choiceColor = Colors.transparent;
+  Map<String, Color> choiceColors = {};
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +34,7 @@ class _PuzzleViewState extends State<PuzzleView> {
 
   Widget _buildPuzzleTextView() {
     return Container(
-      padding: EdgeInsets.only(bottom:15.0),
+        padding: EdgeInsets.only(bottom: 15.0),
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height /
               (widget.puzzle.choices.length > 0 ? 2.75 : 1.75),
@@ -35,9 +45,70 @@ class _PuzzleViewState extends State<PuzzleView> {
         ));
   }
 
-  _onClearTextFieldTapped() {}
+  _onClearTextFieldTapped() {
+    answerTextController.clear();
+  }
 
-  _onSubmitAnswerTapped() {}
+  _onSubmitAnswerTapped() {
+    String answer = answerTextController.text;
+    if (answer == widget.puzzle.answer) {
+      setState(() {
+        textFieldColor = ThemeProvider().green();
+      });
+      Timer(Duration(milliseconds: 500), () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ResultView(widget.puzzle),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      });
+    } else {
+      setState(() {
+        textFieldColor = ThemeProvider().red();
+      });
+      Timer(Duration(milliseconds: 500), () {
+        setState(() {
+          textFieldColor = Colors.transparent;
+        });
+        _onClearTextFieldTapped();
+      });
+    }
+  }
+
+  onAnswerChoiceTap(String answer) {
+    print(choiceColors[answer]);
+    if (answer == widget.puzzle.answer) {
+      setState(() {
+        choiceColors[answer] = ThemeProvider().green();
+      });
+
+      Timer(Duration(milliseconds: 500), () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ResultView(widget.puzzle),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 300),
+          ),
+        );
+      });
+    } else {
+      setState(() {
+        choiceColors[answer] = ThemeProvider().red();
+      });
+      print(choiceColors[answer]);
+      Timer(Duration(milliseconds: 500), () {
+        setState(() {
+          choiceColors[answer] = Colors.transparent;
+        });
+      });
+    }
+  }
 
   _watchVideoAds() {}
 
@@ -84,11 +155,21 @@ class _PuzzleViewState extends State<PuzzleView> {
       padding: EdgeInsets.only(bottom: 5.0),
       child: widget.puzzle.choices.length > 0
           ? Column(
-              children: widget.puzzle.choices
-                  .map((choice) => Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: ButtonWithBorder(choice)))
-                  .toList())
+              children: widget.puzzle.choices.map((choice) {
+              print("enter reset state");
+              if (choiceColors.length < 4) {
+                choiceColors.addAll({choice: Colors.transparent});
+              }
+              return Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: ButtonWithBorder(
+                    choice,
+                    bgColor: choiceColors[choice],
+                    onTap: () {
+                      onAnswerChoiceTap(choice);
+                    },
+                  ));
+            }).toList())
           : Row(
               children: <Widget>[
                 SizedBox(
@@ -101,7 +182,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                       size: 30,
                     ),
                     ThemeProvider().red(),
-                    _onSubmitAnswerTapped),
+                    _onClearTextFieldTapped),
                 SizedBox(
                   width: 8.0,
                 ),
@@ -112,13 +193,14 @@ class _PuzzleViewState extends State<PuzzleView> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                           width: 4.0, color: ThemeProvider().blueBorder()),
-                      color: Colors.transparent,
+                      color: textFieldColor,
                     ),
                     child: TextField(
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headline3,
                       focusNode: _focusNode,
                       onSubmitted: _dismissKeyboard,
+                      controller: answerTextController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Answer here",
@@ -136,7 +218,7 @@ class _PuzzleViewState extends State<PuzzleView> {
                       size: 30,
                     ),
                     ThemeProvider().green(),
-                    _onClearTextFieldTapped),
+                    _onSubmitAnswerTapped),
                 SizedBox(
                   width: 8.0,
                 ),
@@ -186,7 +268,15 @@ class _PuzzleViewState extends State<PuzzleView> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => PuzzleListView(),
+                transitionsBuilder: (c, anim, a2, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 300),
+              ),
+            );
           },
         ),
         actions: [RemainingCoin()],

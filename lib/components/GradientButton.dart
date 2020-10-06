@@ -7,10 +7,10 @@ class GradientButton extends StatelessWidget {
   final IconData icon;
   final String text;
   final TextStyle style;
-  final Function onTap;
+  final VoidCallback onTap;
   final LinearGradient gradient = ThemeProvider().primaryGradient();
 
-  GradientButton(this.icon, this.text, {this.onTap, this.style});
+  GradientButton(this.text, {this.icon, this.onTap, this.style});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class GradientButton extends StatelessWidget {
           decoration: BoxDecoration(
               gradient: gradient, borderRadius: BorderRadius.circular(10.0)),
           child: Container(
-            constraints: const BoxConstraints(minWidth: 88.0, minHeight: 44.0),
+            constraints: const BoxConstraints(minWidth: 88.0, minHeight: 50.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

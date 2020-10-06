@@ -77,7 +77,6 @@ class PuzzleCell extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.only(bottom: 4.0),
                     child: GradientButton(
-                      null,
                       "Play",
                       onTap: onTap,
                     ),
