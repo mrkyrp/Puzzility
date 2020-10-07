@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
+import 'package:puzzility/service/PuzzleRepository.dart';
 import 'package:puzzility/views/hint/HintView.dart';
 import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
 import 'dart:math';
@@ -25,6 +27,7 @@ class _PuzzleViewState extends State<PuzzleView> {
   final answerTextController = TextEditingController();
   Color textFieldColor = Colors.transparent;
   Color choiceColor = Colors.transparent;
+  int totalStars = 3;
   Map<String, Color> choiceColors = {};
 
   @override
@@ -49,12 +52,15 @@ class _PuzzleViewState extends State<PuzzleView> {
     answerTextController.clear();
   }
 
-  _onSubmitAnswerTapped() {
+  _onSubmitAnswerTapped() async {
     String answer = answerTextController.text;
     if (answer == widget.puzzle.answer) {
       setState(() {
         textFieldColor = ThemeProvider().green();
       });
+
+      await Provider.of<PuzzleRepository>(context, listen: false)
+          .completePuzzle(widget.puzzle, totalStars);
       Timer(Duration(milliseconds: 500), () {
         Navigator.push(
           context,
@@ -70,6 +76,12 @@ class _PuzzleViewState extends State<PuzzleView> {
       setState(() {
         textFieldColor = ThemeProvider().red();
       });
+      if (totalStars > 1) {
+        totalStars -= 1;
+        await Provider.of<PuzzleRepository>(context, listen: false)
+            .setStar(widget.puzzle, totalStars);
+      }
+
       Timer(Duration(milliseconds: 500), () {
         setState(() {
           textFieldColor = Colors.transparent;
@@ -79,9 +91,10 @@ class _PuzzleViewState extends State<PuzzleView> {
     }
   }
 
-  onAnswerChoiceTap(String answer) {
-    print(choiceColors[answer]);
+  onAnswerChoiceTap(String answer) async {
     if (answer == widget.puzzle.answer) {
+      await Provider.of<PuzzleRepository>(context, listen: false)
+          .completePuzzle(widget.puzzle, totalStars);
       setState(() {
         choiceColors[answer] = ThemeProvider().green();
       });
@@ -98,10 +111,15 @@ class _PuzzleViewState extends State<PuzzleView> {
         );
       });
     } else {
+      if (totalStars > 1) {
+        totalStars -= 1;
+        await Provider.of<PuzzleRepository>(context, listen: false)
+            .setStar(widget.puzzle, totalStars);
+      }
       setState(() {
         choiceColors[answer] = ThemeProvider().red();
       });
-      print(choiceColors[answer]);
+
       Timer(Duration(milliseconds: 500), () {
         setState(() {
           choiceColors[answer] = Colors.transparent;
@@ -150,13 +168,11 @@ class _PuzzleViewState extends State<PuzzleView> {
   }
 
   Widget _buildAnswerSection() {
-    print(widget.puzzle.choices);
     return Container(
       padding: EdgeInsets.only(bottom: 5.0),
       child: widget.puzzle.choices.length > 0
           ? Column(
               children: widget.puzzle.choices.map((choice) {
-              print("enter reset state");
               if (choiceColors.length < 4) {
                 choiceColors.addAll({choice: Colors.transparent});
               }

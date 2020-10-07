@@ -1,19 +1,18 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/GradientButton.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
+import 'package:puzzility/model/UnlockedPuzzle.dart';
 import 'package:puzzility/service/PuzzleRepository.dart';
-import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
-import 'package:puzzility/views/puzzle_view/PuzzleView.dart';
 
 class ResultView extends StatelessWidget {
   Puzzle puzzle;
+  UnlockedPuzzle unlockedPuzzle;
 
   ResultView(this.puzzle);
 
@@ -41,7 +40,6 @@ class ResultView extends StatelessWidget {
   _watchVideoAds() {}
 
   _navigateToNextPuzzle(BuildContext context) {
-    
     // if (puzzle.puzzleNo < _puzzleRepository.puzzleList.length) {
     //   Navigator.push(
     //     context,
@@ -78,6 +76,10 @@ class ResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    unlockedPuzzle = Provider.of<PuzzleRepository>(context).unlockedPuzzleList[
+        Provider.of<PuzzleRepository>(context)
+            .unlockedPuzzleList
+            .indexWhere((element) => element.puzzleNo == puzzle.puzzleNo)];
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
