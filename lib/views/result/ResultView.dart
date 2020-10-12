@@ -9,6 +9,7 @@ import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/model/UnlockedPuzzle.dart';
 import 'package:puzzility/service/PuzzleRepository.dart';
+import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
 
 class ResultView extends StatelessWidget {
   Puzzle puzzle;
@@ -74,6 +75,18 @@ class ResultView extends StatelessWidget {
     );
   }
 
+  _onBackPressed(BuildContext context) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => PuzzleListView(),
+        transitionsBuilder: (c, anim, a2, child) =>
+            FadeTransition(opacity: anim, child: child),
+        transitionDuration: Duration(milliseconds: 300),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     unlockedPuzzle = Provider.of<PuzzleRepository>(context).unlockedPuzzleList[
@@ -84,6 +97,12 @@ class ResultView extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text("Puzzle ${puzzle.puzzleNo}"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            _onBackPressed(context);
+          },
+        ),
         actions: [RemainingCoin()],
         backgroundColor: ThemeProvider().darkBlue(),
       ),

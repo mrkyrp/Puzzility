@@ -75,10 +75,13 @@ class PuzzleRepository extends ChangeNotifier {
 
   completePuzzle(Puzzle puzzle, int stars) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     int index = unlockedPuzzleList
         .indexWhere((element) => element.puzzleNo == puzzle.puzzleNo);
     unlockedPuzzleList[index].isCompleted = true;
-    unlockedPuzzleList[index].stars = stars;
+    if (unlockedPuzzleList[index].stars == 0) {
+      unlockedPuzzleList[index].stars = stars;
+    }
     String data = json.encode(
       unlockedPuzzleList
           .map<Map<String, dynamic>>((element) => element.toJson())
