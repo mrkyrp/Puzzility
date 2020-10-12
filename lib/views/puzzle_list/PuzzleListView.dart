@@ -51,7 +51,8 @@ class _PuzzleListViewState extends State<PuzzleListView> {
       context,
       PageRouteBuilder(
         pageBuilder: (c, a1, a2) => PuzzleView(
-            Provider.of<PuzzleRepository>(context).puzzleList[index]),
+            Provider.of<PuzzleRepository>(context).puzzleList[index],
+            Provider.of<PuzzleRepository>(context).unlockedPuzzleList[index]),
         transitionsBuilder: (c, anim, a2, child) =>
             FadeTransition(opacity: anim, child: child),
         transitionDuration: Duration(milliseconds: 300),
@@ -93,8 +94,7 @@ class _PuzzleListViewState extends State<PuzzleListView> {
                         height: 10,
                       );
                     },
-                    itemCount: repository.puzzleList
-                        .length) 
+                    itemCount: repository.puzzleList.length)
                 : SizedBox(
                     width: 0,
                     height: 0,

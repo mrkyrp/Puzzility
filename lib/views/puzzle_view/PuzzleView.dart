@@ -7,6 +7,7 @@ import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
+import 'package:puzzility/model/UnlockedPuzzle.dart';
 import 'package:puzzility/service/PuzzleRepository.dart';
 import 'package:puzzility/views/hint/HintView.dart';
 import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
@@ -16,7 +17,8 @@ import 'package:puzzility/views/result/ResultView.dart';
 
 class PuzzleView extends StatefulWidget {
   Puzzle puzzle;
-  PuzzleView(this.puzzle);
+  UnlockedPuzzle unlockedPuzzle;
+  PuzzleView(this.puzzle, this.unlockedPuzzle);
   @override
   _PuzzleViewState createState() => _PuzzleViewState();
 }
@@ -138,7 +140,8 @@ class _PuzzleViewState extends State<PuzzleView> {
     Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (c, a1, a2) => HintView(widget.puzzle),
+        pageBuilder: (c, a1, a2) =>
+            HintView(widget.puzzle, widget.unlockedPuzzle),
         transitionsBuilder: (c, anim, a2, child) =>
             FadeTransition(opacity: anim, child: child),
         transitionDuration: Duration(milliseconds: 300),

@@ -1,18 +1,39 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzility/ThemeProvider.dart';
+import 'package:puzzility/components/AlertDialogController.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
+import 'package:puzzility/model/UnlockedPuzzle.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class HintView extends StatefulWidget {
   Puzzle puzzle;
-  HintView(this.puzzle);
+  UnlockedPuzzle unlockedPuzzle;
+
+  HintView(this.puzzle, this.unlockedPuzzle);
   @override
   _HintViewState createState() => _HintViewState();
 }
 
 class _HintViewState extends State<HintView> {
-  _onTabBarTapped(int index) {}
+  AlertDialogController alertController;
+
+  _onUnlockHint(int index) {
+    
+  }
+
+  _onTabBarTapped(int index, BuildContext context) {
+    if (!widget.unlockedPuzzle.unlockedHints[index]) {
+      alertController.showAlertDialog(
+          message: "Unlock this hint for 50 coins",
+          cancelActionTitle: "cancel",
+          okActionTitle: "Unlock",
+          onOkPressed: () {
+            _onUnlockHint(index);
+          });
+    }
+  }
 
   Widget _buildHintTextContainer(int index) {
     return Container(
@@ -26,6 +47,7 @@ class _HintViewState extends State<HintView> {
 
   @override
   Widget build(BuildContext context) {
+    alertController = AlertDialogController(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -44,7 +66,7 @@ class _HintViewState extends State<HintView> {
           backgroundColor: ThemeProvider().darkBlue(),
           bottom: TabBar(
             onTap: (index) {
-              _onTabBarTapped(index);
+              _onTabBarTapped(index, context);
             },
             indicator: RectangularIndicator(
               color: ThemeProvider().green(),
@@ -53,16 +75,18 @@ class _HintViewState extends State<HintView> {
               topLeftRadius: 100,
               topRightRadius: 100,
             ),
-            
             tabs: [
               Tab(
-                child: Text("Hint 1",style:Theme.of(context).textTheme.bodyText2),
+                child: Text("Hint 1",
+                    style: Theme.of(context).textTheme.bodyText2),
               ),
               Tab(
-                child: Text("Hint 2",style:Theme.of(context).textTheme.bodyText2),
+                child: Text("Hint 2",
+                    style: Theme.of(context).textTheme.bodyText2),
               ),
               Tab(
-                child: Text("Hint 3",style:Theme.of(context).textTheme.bodyText2),
+                child: Text("Hint 3",
+                    style: Theme.of(context).textTheme.bodyText2),
               ),
             ],
           ),
