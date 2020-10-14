@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:puzzility/ThemeProvider.dart';
+import 'package:puzzility/components/AlertDialogController.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/model/UnlockedPuzzle.dart';
+import 'package:puzzility/service/PlayerRepository.dart';
 import 'package:puzzility/service/PuzzleRepository.dart';
 import 'package:puzzility/views/hint/HintView.dart';
 import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
@@ -25,6 +27,7 @@ class PuzzleView extends StatefulWidget {
 
 class _PuzzleViewState extends State<PuzzleView> {
   FocusNode _focusNode = FocusNode();
+  AlertDialogController alertController;
 
   final answerTextController = TextEditingController();
   Color textFieldColor = Colors.transparent;
@@ -138,6 +141,32 @@ class _PuzzleViewState extends State<PuzzleView> {
   }
 
   _navigateToHints() {
+    widget.unlockedPuzzle.unlockedHints[0]
+        ? Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (c, a1, a2) =>
+                  HintView(widget.puzzle, widget.unlockedPuzzle),
+              transitionsBuilder: (c, anim, a2, child) =>
+                  FadeTransition(opacity: anim, child: child),
+              transitionDuration: Duration(milliseconds: 300),
+            ),
+          )
+        : alertController.showAlertDialog(
+            message: "Unlock this hint for 50 coins",
+            cancelActionTitle: "cancel",
+            okActionTitle: "Unlock",
+            onOkPressed: () {
+              Navigator.pop(context);
+              _onUnlockHint(0);
+            });
+  }
+
+  _onUnlockHint(int index) async {
+    await Provider.of<PuzzleRepository>(context, listen: false)
+        .unlockHint(index, widget.puzzle);
+    await Provider.of<PlayerRepository>(context, listen: false)
+        .subtractCoin(50);
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -279,6 +308,7 @@ class _PuzzleViewState extends State<PuzzleView> {
 
   @override
   Widget build(BuildContext context) {
+    alertController = AlertDialogController(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -299,7 +329,11 @@ class _PuzzleViewState extends State<PuzzleView> {
             );
           },
         ),
-        actions: [RemainingCoin()],
+        actions: [
+          Consumer<PlayerRepository>(builder: (context, playerRepo, child) {
+            return RemainingCoin(playerRepo.player.coins);
+          })
+        ],
         backgroundColor: ThemeProvider().darkBlue(),
       ),
       body: SafeArea(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:puzzility/ThemeProvider.dart';
 
 class RemainingCoin extends StatelessWidget {
+  int coins = 0;
+  RemainingCoin(this.coins);
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -13,7 +15,8 @@ class RemainingCoin extends StatelessWidget {
         SizedBox(
           width: 4,
         ),
-        Text("200" + " +", style: Theme.of(context).textTheme.headline2),
+        Text(coins.toString() + " +",
+            style: Theme.of(context).textTheme.headline2),
         SizedBox(
           width: 8,
         ),

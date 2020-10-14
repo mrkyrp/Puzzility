@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/GradientButton.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
+import 'package:puzzility/service/PlayerRepository.dart';
 
 class SettingView extends StatefulWidget {
   @override
@@ -143,7 +145,11 @@ class _SettingViewState extends State<SettingView> {
             Navigator.pop(context);
           },
         ),
-        actions: [RemainingCoin()],
+      actions: [
+            Consumer<PlayerRepository>(builder: (context, playerRepo, child) {
+              return RemainingCoin(playerRepo.player.coins);
+            })
+          ],
         backgroundColor: ThemeProvider().darkBlue(),
       ),
       body: SafeArea(

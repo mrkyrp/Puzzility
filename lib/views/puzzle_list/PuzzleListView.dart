@@ -4,9 +4,11 @@ import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/PuzzleCell.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
+import 'package:puzzility/service/PlayerRepository.dart';
 import 'package:puzzility/service/PuzzleRepository.dart';
 import 'package:puzzility/views/puzzle_view/PuzzleView.dart';
 import 'package:puzzility/views/setting/SettingView.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PuzzleListView extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class PuzzleListView extends StatefulWidget {
 
 class _PuzzleListViewState extends State<PuzzleListView> {
   PuzzleRepository _puzzleRepository = PuzzleRepository();
+  PlayerRepository _playerRepository = PlayerRepository();
 
   // List<Widget> _buildQuestionList(BuildContext context) {
   //   return Provider.of<PuzzleRepository>(context)
@@ -26,8 +29,13 @@ class _PuzzleListViewState extends State<PuzzleListView> {
   @override
   void initState() {
     super.initState();
-
+    clearPref();
     // setup();
+  }
+
+  clearPref() async {
+    // final pref = await SharedPreferences.getInstance();
+    // await pref.clear();
   }
 
   // setup() async {
@@ -70,7 +78,13 @@ class _PuzzleListViewState extends State<PuzzleListView> {
             icon: Icon(Icons.settings, color: Colors.white),
             onPressed: onSettingTapped,
           ),
-          actions: [RemainingCoin()],
+          actions: [
+            Consumer<PlayerRepository>(builder: (context, playerRepo, child) {
+              return playerRepo.player != null
+                  ? RemainingCoin(playerRepo.player.coins)
+                  : Container();
+            })
+          ],
           backgroundColor: ThemeProvider().darkBlue(),
         ),
         body: SafeArea(

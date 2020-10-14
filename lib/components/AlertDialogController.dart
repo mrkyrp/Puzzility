@@ -21,27 +21,35 @@ class AlertDialogController {
             ? CupertinoAlertDialog(
                 title: title != "" ? Text(title) : null,
                 content: message != "" ? Text(message) : null,
-                actions: <Widget>[
-                  cancelActionTitle != ""
-                      ? CupertinoDialogAction(
+                actions: cancelActionTitle != ""
+                    ? <Widget>[
+                        CupertinoDialogAction(
                           child: Text(cancelActionTitle),
                           onPressed: onCancelPressed != null
                               ? onCancelPressed
                               : () {
                                   Navigator.of(context).pop();
                                 },
-                        )
-                      : Container(),
-                  CupertinoDialogAction(
-                    child: Text(okActionTitle),
-                    onPressed: onOkPressed != null
-                        ? onOkPressed
-                        : () {
-                            Navigator.of(context).pop();
-                          },
-                  ),
-                ],
-              )
+                        ),
+                        CupertinoDialogAction(
+                          child: Text(okActionTitle),
+                          onPressed: onOkPressed != null
+                              ? onOkPressed
+                              : () {
+                                  Navigator.of(context).pop();
+                                },
+                        ),
+                      ]
+                    : <Widget>[
+                        CupertinoDialogAction(
+                          child: Text(okActionTitle),
+                          onPressed: onOkPressed != null
+                              ? onOkPressed
+                              : () {
+                                  Navigator.of(context).pop();
+                                },
+                        ),
+                      ])
             : AlertDialog(
                 title: title != "" ? Text(title) : null,
                 content: SingleChildScrollView(

@@ -6,11 +6,15 @@ part 'UnlockedPuzzle.g.dart';
 class UnlockedPuzzle {
   int puzzleNo;
   int stars;
-  List<bool> unlockedHints;
+  var unlockedHints;
   bool isCompleted;
 
   UnlockedPuzzle(this.puzzleNo,
-      {this.stars = 0, this.unlockedHints = const [false,false,false], this.isCompleted = false});
+      {this.stars = 0, this.unlockedHints, this.isCompleted = false}){
+        if(unlockedHints == null){
+          unlockedHints = [false,false,false];
+        }
+      }
   factory UnlockedPuzzle.fromJson(Map<String, dynamic> json) =>
       _$UnlockedPuzzleFromJson(json);
   Map<String, dynamic> toJson() => _$UnlockedPuzzleToJson(this);

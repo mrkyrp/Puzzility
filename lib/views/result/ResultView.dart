@@ -8,6 +8,7 @@ import 'package:puzzility/components/GradientButton.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/model/UnlockedPuzzle.dart';
+import 'package:puzzility/service/PlayerRepository.dart';
 import 'package:puzzility/service/PuzzleRepository.dart';
 import 'package:puzzility/views/puzzle_list/PuzzleListView.dart';
 
@@ -103,7 +104,11 @@ class ResultView extends StatelessWidget {
             _onBackPressed(context);
           },
         ),
-        actions: [RemainingCoin()],
+       actions: [
+            Consumer<PlayerRepository>(builder: (context, playerRepo, child) {
+              return RemainingCoin(playerRepo.player.coins);
+            })
+          ],
         backgroundColor: ThemeProvider().darkBlue(),
       ),
       body: SafeArea(

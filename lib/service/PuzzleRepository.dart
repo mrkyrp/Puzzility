@@ -36,6 +36,23 @@ class PuzzleRepository extends ChangeNotifier {
     return puzzleList;
   }
 
+  unlockHint(int index, Puzzle puzzle) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int unlockPuzzleIndex = unlockedPuzzleList
+        .indexWhere((element) => element.puzzleNo == puzzle.puzzleNo);
+    unlockedPuzzleList[unlockPuzzleIndex].unlockedHints[index] = true;
+
+    String data = json.encode(
+      unlockedPuzzleList
+          .map<Map<String, dynamic>>((element) => element.toJson())
+          .toList(),
+    );
+    prefs.setString("unlockedPuzzle", data).then((bool success) {
+      return success;
+    });
+    notifyListeners();
+  }
+
   bool isUnlock(int index) {
     if (unlockedPuzzleList.length > 0) {
       UnlockedPuzzle puzzle = unlockedPuzzleList.firstWhere(
