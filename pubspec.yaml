@@ -36,7 +36,6 @@ dependencies:
   provider: ^4.3.2+2
   json_serializable: ^3.5.0
   shared_preferences: ^0.5.12
-  adaptive_dialog: ^0.8.0+1
 
 dependency_overrides:
   xml: ^4.1.0

@@ -79,9 +79,11 @@ class PuzzleRepository extends ChangeNotifier {
     int index = unlockedPuzzleList
         .indexWhere((element) => element.puzzleNo == puzzle.puzzleNo);
     unlockedPuzzleList[index].isCompleted = true;
-    if (unlockedPuzzleList[index].stars == 0) {
+    if (unlockedPuzzleList[index].stars == 0 ||
+        unlockedPuzzleList[index].stars > stars) {
       unlockedPuzzleList[index].stars = stars;
     }
+
     String data = json.encode(
       unlockedPuzzleList
           .map<Map<String, dynamic>>((element) => element.toJson())
@@ -97,7 +99,9 @@ class PuzzleRepository extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int index = unlockedPuzzleList
         .indexWhere((element) => element.puzzleNo == puzzle.puzzleNo);
+
     unlockedPuzzleList[index].stars = stars;
+
     String data = json.encode(
       unlockedPuzzleList
           .map<Map<String, dynamic>>((element) => element.toJson())
@@ -111,9 +115,7 @@ class PuzzleRepository extends ChangeNotifier {
 
   setup() async {
     await setupPuzzleList();
-    print("check puzzle list ${puzzleList.length}");
     await setupUnlockedPuzzle();
-    print("check puzzle list ${unlockedPuzzleList.length}");
     notifyListeners();
   }
 

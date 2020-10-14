@@ -1,4 +1,3 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/AlertDialogController.dart';
@@ -19,12 +18,11 @@ class HintView extends StatefulWidget {
 class _HintViewState extends State<HintView> {
   AlertDialogController alertController;
 
-  _onUnlockHint(int index) {
-    
-  }
+  _onUnlockHint(int index) {}
 
   _onTabBarTapped(int index, BuildContext context) {
     if (!widget.unlockedPuzzle.unlockedHints[index]) {
+      
       alertController.showAlertDialog(
           message: "Unlock this hint for 50 coins",
           cancelActionTitle: "cancel",

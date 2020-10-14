@@ -83,7 +83,9 @@ class _PuzzleListViewState extends State<PuzzleListView> {
                       return PuzzleCell(
                         repository.puzzleList[index],
                         isUnlocked: repository.isUnlock(index),
-                        stars: repository.getStars(index),
+                        stars: repository.unlockedPuzzleList[index].isCompleted
+                            ? repository.getStars(index)
+                            : 0,
                         onTap: () {
                           onPuzzleCellTapped(index, context);
                         },

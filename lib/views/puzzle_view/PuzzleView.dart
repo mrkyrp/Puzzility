@@ -78,6 +78,7 @@ class _PuzzleViewState extends State<PuzzleView> {
       setState(() {
         textFieldColor = ThemeProvider().red();
       });
+      print("chck total stars ${totalStars}");
       if (totalStars > 1) {
         totalStars -= 1;
         await Provider.of<PuzzleRepository>(context, listen: false)
