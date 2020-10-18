@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:puzzility/model/Constants.dart';
 
 part 'Player.g.dart';
 
@@ -9,7 +10,7 @@ class Player {
   bool isNotificationOn;
 
   Player(
-      {this.coins = 50, this.isSoundOn = true, this.isNotificationOn = true});
+      {this.coins = HINT_PRICE, this.isSoundOn = true, this.isNotificationOn = true});
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
   Map<String, dynamic> toJson() => _$PlayerToJson(this);
 }

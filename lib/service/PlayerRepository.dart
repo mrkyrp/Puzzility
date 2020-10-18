@@ -12,7 +12,7 @@ class PlayerRepository extends ChangeNotifier {
 
   setup() async {
     await setupPlayer();
-    
+
     notifyListeners();
   }
 
@@ -44,6 +44,30 @@ class PlayerRepository extends ChangeNotifier {
   Future<bool> addCoin(int amount) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     player.coins += amount;
+
+    String data = json.encode(player.toJson());
+    await prefs.setString("currentPlayer", data).then((bool success) {
+      notifyListeners();
+      return success;
+    });
+    return false;
+  }
+
+  Future<bool> updateSoundSetting(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    player.isSoundOn = value;
+
+    String data = json.encode(player.toJson());
+    await prefs.setString("currentPlayer", data).then((bool success) {
+      notifyListeners();
+      return success;
+    });
+    return false;
+  }
+
+  Future<bool> updateNotificationSetting(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    player.isNotificationOn = value;
 
     String data = json.encode(player.toJson());
     await prefs.setString("currentPlayer", data).then((bool success) {

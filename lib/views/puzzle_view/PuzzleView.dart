@@ -7,6 +7,7 @@ import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/AlertDialogController.dart';
 import 'package:puzzility/components/ButtonWithBorder.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
+import 'package:puzzility/model/Constants.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/model/UnlockedPuzzle.dart';
 import 'package:puzzility/service/PlayerRepository.dart';
@@ -153,7 +154,7 @@ class _PuzzleViewState extends State<PuzzleView> {
             ),
           )
         : alertController.showAlertDialog(
-            message: "Unlock this hint for 50 coins",
+            message: "Unlock this hint for $HINT_PRICE coins",
             cancelActionTitle: "cancel",
             okActionTitle: "Unlock",
             onOkPressed: () {
@@ -166,7 +167,7 @@ class _PuzzleViewState extends State<PuzzleView> {
     await Provider.of<PuzzleRepository>(context, listen: false)
         .unlockHint(index, widget.puzzle);
     await Provider.of<PlayerRepository>(context, listen: false)
-        .subtractCoin(50);
+        .subtractCoin(HINT_PRICE);
     Navigator.push(
       context,
       PageRouteBuilder(

@@ -16,6 +16,7 @@ class SettingView extends StatefulWidget {
 class _SettingViewState extends State<SettingView> {
   bool isSoundOn = true;
   bool isNotificationOn = true;
+
   Widget _buildShareSection() {
     return Container(
       child: Column(
@@ -36,7 +37,8 @@ class _SettingViewState extends State<SettingView> {
           SizedBox(height: 24),
           Container(
             width: MediaQuery.of(context).size.width / 1.2,
-            child: GradientButton("Share",icon:Icons.share,
+            child: GradientButton("Share",
+                icon: Icons.share,
                 style: Theme.of(context)
                     .textTheme
                     .headline2
@@ -47,49 +49,65 @@ class _SettingViewState extends State<SettingView> {
     );
   }
 
-  Widget _switchCell(String title, bool isOn) {
-    return Row(
-      children: <Widget>[
-        Text(title, style: Theme.of(context).textTheme.headline1),
-        Spacer(),
-        Platform.isIOS
-            ? CupertinoSwitch(
-                value: isOn,
-                onChanged: (bool value) {
-                  setState(() {
-                    if (title == "Sound") {
+  toggleSound(bool value) async {
+    await Provider.of<PlayerRepository>(context, listen: false)
+        .updateSoundSetting(value);
+  }
+
+  toggleNotification(bool value) async {
+    await Provider.of<PlayerRepository>(context, listen: false)
+        .updateNotificationSetting(value);
+  }
+
+  Widget _switchCell(String title) {
+    return Consumer<PlayerRepository>(
+      builder: (context, playerRepo, child) {
+        return Row(
+          children: <Widget>[
+            Text(title, style: Theme.of(context).textTheme.headline1),
+            Spacer(),
+            Platform.isIOS
+                ? CupertinoSwitch(
+                    value: title == "Sound" ? playerRepo.player.isSoundOn : playerRepo.player.isNotificationOn,
+                    onChanged: (bool value) {
                       setState(() {
-                        isSoundOn = value;
+                        if (title == "Sound") {
+                          setState(() {
+                            isSoundOn = value;
+                          });
+                          toggleSound(value);
+                        } else {
+                          setState(() {
+                            isNotificationOn = value;
+                          });
+                          toggleNotification(value);
+                        }
                       });
-                    } else {
+                    },
+                    activeColor: ThemeProvider().teal(),
+                  )
+                : Switch(
+                    value: playerRepo.player.isNotificationOn,
+                    onChanged: (value) {
                       setState(() {
-                        isNotificationOn = value;
+                        if (title == "Sound") {
+                          setState(() {
+                            isSoundOn = value;
+                          });
+                        } else {
+                          setState(() {
+                            isNotificationOn = value;
+                          });
+                        }
                       });
-                    }
-                  });
-                },
-                activeColor: ThemeProvider().teal(),
-              )
-            : Switch(
-                value: isOn,
-                onChanged: (value) {
-                  setState(() {
-                    if (title == "Sound") {
-                      setState(() {
-                        isSoundOn = value;
-                      });
-                    } else {
-                      setState(() {
-                        isNotificationOn = value;
-                      });
-                    }
-                  });
-                },
-                activeTrackColor: ThemeProvider().teal(),
-                activeColor: Colors.white,
-                // activeColor: Colors.white,
-              ),
-      ],
+                    },
+                    activeTrackColor: ThemeProvider().teal(),
+                    activeColor: Colors.white,
+                    // activeColor: Colors.white,
+                  ),
+          ],
+        );
+      },
     );
   }
 
@@ -97,9 +115,9 @@ class _SettingViewState extends State<SettingView> {
     return Container(
       child: Column(
         children: <Widget>[
-          _switchCell("Sound", isSoundOn),
+          _switchCell("Sound"),
           SizedBox(height: 8),
-          _switchCell("Notification", isNotificationOn),
+          _switchCell("Notification"),
         ],
       ),
     );
@@ -145,11 +163,11 @@ class _SettingViewState extends State<SettingView> {
             Navigator.pop(context);
           },
         ),
-      actions: [
-            Consumer<PlayerRepository>(builder: (context, playerRepo, child) {
-              return RemainingCoin(playerRepo.player.coins);
-            })
-          ],
+        actions: [
+          Consumer<PlayerRepository>(builder: (context, playerRepo, child) {
+            return RemainingCoin(playerRepo.player.coins);
+          })
+        ],
         backgroundColor: ThemeProvider().darkBlue(),
       ),
       body: SafeArea(

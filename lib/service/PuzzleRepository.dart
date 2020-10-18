@@ -38,6 +38,7 @@ class PuzzleRepository extends ChangeNotifier {
 
   unlockHint(int index, Puzzle puzzle) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    
     int unlockPuzzleIndex = unlockedPuzzleList
         .indexWhere((element) => element.puzzleNo == puzzle.puzzleNo);
     unlockedPuzzleList[unlockPuzzleIndex].unlockedHints[index] = true;

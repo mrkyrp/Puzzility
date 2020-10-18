@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:puzzility/ThemeProvider.dart';
 import 'package:puzzility/components/AlertDialogController.dart';
 import 'package:puzzility/components/RemainingCoin.dart';
+import 'package:puzzility/model/Constants.dart';
 import 'package:puzzility/model/Puzzle.dart';
 import 'package:puzzility/model/UnlockedPuzzle.dart';
 import 'package:puzzility/service/PlayerRepository.dart';
@@ -24,11 +25,22 @@ class _HintViewState extends State<HintView>
   TabController _tabController;
 
   _onUnlockHint(int index) async {
-    await Provider.of<PuzzleRepository>(context, listen: false)
-        .unlockHint(index, widget.puzzle);
-    await Provider.of<PlayerRepository>(context, listen: false)
-        .subtractCoin(50);
-    Navigator.pop(context);
+    if (Provider.of<PlayerRepository>(context, listen: false).player.coins >=
+        HINT_PRICE) {
+      await Provider.of<PuzzleRepository>(context, listen: false)
+          .unlockHint(index, widget.puzzle);
+      await Provider.of<PlayerRepository>(context, listen: false)
+          .subtractCoin(HINT_PRICE);
+      Navigator.pop(context);
+    } else {
+      alertController.showAlertDialog(
+          message: "You don't have enough coin",
+          okActionTitle: "Okay",
+          onOkPressed: () {
+            Navigator.pop(context);
+            _tabController.index = 0;
+          });
+    }
   }
 
   @override
@@ -47,7 +59,7 @@ class _HintViewState extends State<HintView>
           okActionTitle: "Okay",
           onOkPressed: () {
             Navigator.pop(context);
-            _tabController.index = _tabController.previousIndex;
+            _tabController.index = 0; //_tabController.previousIndex;
           });
     } else if (!widget.unlockedPuzzle.unlockedHints[index]) {
       alertController.showAlertDialog(
@@ -59,11 +71,11 @@ class _HintViewState extends State<HintView>
             _tabController.index = _tabController.previousIndex;
           },
           onOkPressed: () {
+            Navigator.pop(context);
             _onUnlockHint(index);
           });
     } else {
       _tabController.animateTo(_tabController.index);
-
     }
   }
 
