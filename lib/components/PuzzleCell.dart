@@ -60,6 +60,7 @@ class PuzzleCell extends StatelessWidget {
                 children: <Widget>[
                   RatingBar(
                     initialRating: stars.toDouble(),
+                    ignoreGestures: true,
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: false,
